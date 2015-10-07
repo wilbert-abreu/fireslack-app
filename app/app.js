@@ -54,6 +54,27 @@ angular
 				});
 			}
 		}
+	})
+		.state('profile', {
+		url: '/profile',
+		controller: 'ProfileCtrl as profileCtrl',
+		templateUrl: 'users/profile.html',
+		resolve: {
+			//The auth dependency is similar to the requireNoAuth dependency we created for login and register, except it does the inverse, where the user is redirected to the home state if they're not authenticated. 
+			auth: function($state, Users, Auth){
+				//The .catch function is a shorthand for handling promises if we don't want to provide a success handler
+				return Auth.$requireAuth().catch(function(){
+					$state.go('home');
+				});
+			},
+			//The profile dependency also ensures authentication, but resolves to the user's profile using the getProfile function we created in our Users service.
+			profile: function(Users, Auth){
+				return Auth.$requireAuth().then(function(auth){
+					//$loaded is a function provided by both $firebaseObject and $firebaseArray that returns a promise that gets resolved when the data from Firebase is available locally.
+					return Users.getProfile(auth.uid).$loaded();
+				});
+			}
+		}
 	});
 
 	$urlRouterProvider.otherwise('/');

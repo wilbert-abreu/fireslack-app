@@ -11,8 +11,3 @@ angular.module('angularfireSlackApp')
 	return auth;
 });
 
-angular.module('angularfireSlackApp')
-	.factory('Users', function($firebaseArray, $firebaseObject, FirebaseUrl) {
-	var Users = {};
-
-});
